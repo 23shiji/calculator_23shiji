@@ -37,6 +37,8 @@
 			总重：{{ mass0 }}t
 			燃料质量：{{ mass3 }}t
 			<br/>
+			平均加速功率：{{ accW }}KW
+			<br/>
 			单次加速时间：{{ accT }}h
 			单次加速距离：{{ accD }}空间里
 			<br/>
@@ -66,6 +68,7 @@
 		mass0:1.0000167119667553,
 		accT:1,
 		accD:1,
+		accW:1,
 		cruiseT:1,
 		asscruiseD:1,
 		asscruiseT:1,
@@ -121,6 +124,7 @@
 			this.mass3=this.mass0-this.mass1;
 			this.fualmass0=this.mass3/this.mass0*100;
 			this.fualmass1=this.mass3/this.mass1*100;
+			this.accW=this.mass3*this.effFual/100*299792458*299792458/this.accT/this.accTime;
 			this.accT=cruiseS/this.acc;
 			this.accD=1/2*this.acc*this.accT*this.accT;
 			this.cruiseT=(this.disGoal*149597870.7*1000-this.accD*this.accTime)/cruiseS;
@@ -237,7 +241,7 @@
 					],
 				unitsE:[
 					{name:'焦耳(J)',rate:1,quantity:0},
-					{name:'标准聚变燃料(sff)',rate:0.00712*299792458*299792458,quantity:0},
+					{name:'标准聚变燃料(sff)',rate:0.007*299792458*299792458,quantity:0},
 					{name:'千瓦时(kw/h)',rate:3600000,quantity:0},
 					{name:'TNT当量(t)',rate:4.184e9,quantity:0},
 					{name:'标准煤(t)',rate:29.3076*1e9,quantity:0},//标准煤数据来源https://wenku.baidu.com/view/5220bfe585868762caaedd3383c4bb4cf7ecb796.html
