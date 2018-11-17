@@ -54,7 +54,7 @@
 	var travelVM = new Vue({
 	el: '#travel',
 	data: {
-		cruiseS: 300,
+		cruiseS: 10,
 		accTime: 2,
 		effFual:0.712,
 		mass1:1,
@@ -100,6 +100,7 @@
 		}
 	},
 	created: function () {
+		this.getAnswer();
 		// `_.debounce` 是一个通过 Lodash 限制操作频率的函数。
 		// 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
 		// AJAX 请求直到用户输入完毕才会发出。想要了解更多关于
@@ -128,16 +129,16 @@
 			this.asscruiseT=this.accT*this.accTime/(this.travelT)*100;
 
 			if(cruiseS>3e8){
-				this.answer='错误巡航速度大于光速'+this.answer
+				this.answer='错误巡航速度大于光速  '+this.answer
 			}
 			else if(cruiseS>2.9e8){
-				this.answer='警告巡航速度接近光速齐奥尔科夫斯基火箭方程失效'+this.answer
+				this.answer='警告巡航速度接近光速齐奥尔科夫斯基火箭方程失效  '+this.answer
 			}
 			if(this.effFual>0.89171){
-				this.answer='警告大于聚变极限'+this.answer
+				this.answer='警告大于聚变极限  '+this.answer
 			}
 			if(this.cruiseT<0){
-				this.answer='错误不能达到巡航速度'+this.answer
+				this.answer='错误不能达到巡航速度  '+this.answer
 			}
 
 			this.fualmass1=this.fualmass1.toFixed(5)
