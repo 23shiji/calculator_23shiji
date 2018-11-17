@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>23世纪计算器</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<style>
+		body{
+			background:#333;
+			color: #fff;
+			}
+
+	</style>
+	<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<h1>23世纪计算器</h1>
+
+	<div id="travel">
+		<h2>星际旅行计算器</h2>
+		<h4>适用于传统核聚变推进方式</h4>
+		<p>
+			巡航速度：<input type="number" v-model.number="cruiseS">空间节
+			加速次数：<input type="number" v-model.number="accTime">次
+			燃料效率：<input type="number" v-model.number="effFual">%
+			<br/>
+			载荷质量：<input type="number" v-model.number="mass1">t
+			<br/>
+			加速度：<input type="number" v-model.number="acc">m/s^2
+			<br/>
+			目标距离：<input type="number" v-model.number="disGoal">au
+		</p>
+		<p>
+			燃料/载荷比：{{ fualmass1 }}%
+			燃料/总重比：{{ fualmass0 }}%
+			<br/>
+			总重：{{ mass0 }}t
+			燃料质量：{{ mass3 }}t
+			<br/>
+			单次加速时间：{{ accT }}h
+			单次加速距离：{{ accD }}空间里
+			<br/>
+			旅行总时间：{{ travelT }}天
+			巡航时间：{{ cruiseT }}天
+			总加速距离占比：{{ asscruiseD }}%
+			总加速时间占比：{{ asscruiseT }}%
+			<br/>
+			{{ answer }}
+		</p>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+	<script>
+	var travelVM = new Vue({
+	el: '#travel',
+	data: {
+		cruiseS: 300,
+		accTime: 2,
+		effFual:0.712,
+		mass1:1,
+		mass3:0,
+		acc:10,
+		disGoal:1,
+		fualmass1:0,
+		fualmass0:0.0016711687470179603,
+		mass0:1.0000167119667553,
+		accT:1,
+		accD:1,
+		cruiseT:1,
+		asscruiseD:1,
+		asscruiseT:1,
+		travelT:1,
+		answer:''
+	},
+	watch: {
+		// 如果 `question` 发生改变，这个函数就会运行
+		cruiseS: function (newQuestion, oldQuestion) {
+		this.answer = '等待您的输入...'
+		this.debouncedGetAnswer()
+		},
+		accTime: function (newQuestion, oldQuestion) {
+		this.answer = '等待您的输入...'
+		this.debouncedGetAnswer()
+		},
+		effFual: function (newQuestion, oldQuestion) {
+		this.answer = '等待您的输入...'
+		this.debouncedGetAnswer()
+		},
+		mass1: function (newQuestion, oldQuestion) {
+		this.answer = '等待您的输入...'
+		this.debouncedGetAnswer()
+		},
+		acc: function (newQuestion, oldQuestion) {
+		this.answer = '等待您的输入...'
+		this.debouncedGetAnswer()
+		},
+		disGoal: function (newQuestion, oldQuestion) {
+		this.answer = '等待您的输入...'
+		this.debouncedGetAnswer()
+		}
+	},
+	created: function () {
+		// `_.debounce` 是一个通过 Lodash 限制操作频率的函数。
+		// 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
+		// AJAX 请求直到用户输入完毕才会发出。想要了解更多关于
+		// `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
+		// 请参考：https://lodash.com/docs#debounce
+		this.debouncedGetAnswer = _.debounce(this.getAnswer, 500);
+	},
+	methods: {
+		getAnswer: function () {
+			this.answer=''
+			var cruiseS=this.cruiseS*29.9792458*1000;
+
+			/*单位制 加速次数 次 燃料效率 % 载荷质量 t 加速度 m/s^2 目标距离 au
+			燃料/载荷比 % 燃料/总重比 % 总重： t 燃料质量： t 单次加速时间： s 
+			单次加速距离： m 旅行时间： s 巡航时间： s 总加速距离占比： % 总加速时间占比： %*/
+			var vE=Math.sqrt(this.effFual/100*2/(1-this.effFual/100))*299792458;
+			this.mass0 =this.mass1*Math.pow(Math.E,cruiseS*this.accTime/vE);
+			this.mass3=this.mass0-this.mass1;
+			this.fualmass0=this.mass3/this.mass0*100;
+			this.fualmass1=this.mass3/this.mass1*100;
+			this.accT=cruiseS/this.acc;
+			this.accD=1/2*this.acc*this.accT*this.accT;
+			this.cruiseT=(this.disGoal*149597870.7*1000-this.accD*this.accTime)/cruiseS;
+			this.travelT=this.cruiseT+this.accT*this.accTime;
+			this.asscruiseD=this.accD*this.accTime/(this.disGoal*149597870.7*1000)*100;
+			this.asscruiseT=this.accT*this.accTime/(this.travelT)*100;
+
+			if(cruiseS>3e8){
+				this.answer='错误巡航速度大于光速'+this.answer
+			}
+			else if(cruiseS>2.9e8){
+				this.answer='警告巡航速度接近光速齐奥尔科夫斯基火箭方程失效'+this.answer
+			}
+			if(this.effFual>0.89171){
+				this.answer='警告大于聚变极限'+this.answer
+			}
+			if(this.cruiseT<0){
+				this.answer='错误不能达到巡航速度'+this.answer
+			}
+
+			this.fualmass1=this.fualmass1.toFixed(5)
+			this.fualmass0=this.fualmass0.toFixed(5)
+			this.mass0=this.mass0.toFixed(5)
+			this.mass3=this.mass3.toFixed(5)
+			this.accT=(this.accT/3600).toFixed(5)
+			this.accD=(this.accD/107925.28488/1000).toFixed(5)
+			this.travelT=(this.travelT/24/3600).toFixed(5)
+			this.cruiseT=(this.cruiseT/24/3600).toFixed(5)
+			this.asscruiseD=this.asscruiseD.toFixed(5)
+			this.asscruiseT=this.asscruiseT.toFixed(5)
+		}
+	}
+	})
+	</script>
+
+
+	<div id="unit-tr">
+		<h2>单位互换</h2>
+		<h3>长度单位</h3>
+		<ul>
+			<li v-for="(unitM,index) in unitsM">
+				<input type="number" v-model.number="unitM.quantity"> 
+				<button v-on:click="unitTr(index,unitsM)">
+					转换
+				</button>
+				{{ unitM.name }}
+			</li>
+		</ul>
+		<h3>速度单位</h3>
+		<ul>
+			<li v-for="(unitV,index) in unitsV">
+				<input type="number" v-model.number="unitV.quantity"> 
+				<button v-on:click="unitTr(index,unitsV)">
+					转换
+				</button>
+				{{ unitV.name }}
+			</li>
+		</ul>
+		<h3>加速度单位</h3>
+		<ul>
+			<li v-for="(unitA,index) in unitsA">
+				<input type="number" v-model.number="unitA.quantity"> 
+				<button v-on:click="unitTr(index,unitsA)">
+					转换
+				</button>
+				{{ unitA.name }}
+			</li>
+		</ul>
+		<h3>体积单位</h3>
+		<ul>
+			<li v-for="(unitVo,index) in unitsVo">
+				<input type="number" v-model.number="unitVo.quantity">
+				<button v-on:click="unitTr(index,unitsVo)">
+					转换
+				</button>
+				{{ unitVo.name }}
+			</li>
+		</ul>
+		<h3>能量单位</h3>
+		<ul>
+			<li v-for="(unitE,index) in unitsE">
+				<input type="number" v-model.number="unitE.quantity">
+				<button v-on:click="unitTr(index,unitsE)">
+					转换
+				</button>
+				{{ unitE.name }}
+			</li>
+		</ul>
+	</div>
+	<script>
+		const unitTr = new Vue({
+			el: '#unit-tr',
+			data:{
+				unitsM:[
+					{name:'千米(km)',rate:1,quantity:0},
+					{name:'天文单位(au)',rate:149597870.7,quantity:0},
+					{name:'空间里(sm)',rate:107925.28488,quantity:0}
+					],
+				unitsV:[
+					{name:'千米每秒(km/s)',rate:1,quantity:0},
+					{name:'千米每小时(km/s)',rate:(1/3600),quantity:0},
+					{name:'空间节(sk)',rate:29.9792458,quantity:0},
+					{name:'天文单位每日(au/d)',rate:(498659569/288000),quantity:0},
+					{name:'光速(c)',rate:299792.458,quantity:0}
+					],
+				unitsA:[
+					{name:'米每秒平方(m/s^2)',rate:1,quantity:0},
+					{name:'重力加速度(g)',rate:9.8,quantity:0},
+					{name:'空间节每小时平方(sk/h)',rate:(149896229/18000000),quantity:0}
+					],
+				unitsVo:[
+					{name:'立方米(m^3)',rate:1,quantity:0},
+					{name:'标准长(sl)',rate:(Math.pow(225/Math.PI,1/3)),quantity:0}
+					],
+				unitsE:[
+					{name:'焦耳(J)',rate:1,quantity:0},
+					{name:'标准聚变燃料(sff)',rate:0.01*299792458*299792458,quantity:0},
+					{name:'千瓦时(kw/h)',rate:3600000,quantity:0},
+					{name:'TNT当量(t)',rate:4.184e9,quantity:0},
+					{name:'标准煤(t)',rate:29.3076*1e9,quantity:0},//标准煤数据来源https://wenku.baidu.com/view/5220bfe585868762caaedd3383c4bb4cf7ecb796.html
+					{name:'小男孩原子弹',rate:4.184e9*13000,quantity:0}
+					]
+			},
+			methods:{
+				unitTr:function(index,units){
+					units[0].quantity=units[index].quantity*units[index].rate;
+					for(var i=0;i<units.length;i++){
+						//console.log(i);
+						units[i].quantity=units[0].quantity/units[i].rate;
+					}
+				}
+			}
+		})
+	</script>
+
+<p>©2018 驿宁物理研究所, all rights reserved.</p>
+</body>
+</html>
