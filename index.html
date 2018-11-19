@@ -10,6 +10,8 @@
 			}
 
 	</style>
+	<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
 	<!-- 开发环境版本，包含了有帮助的命令行警告 -->
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
@@ -26,7 +28,7 @@
 			<br/>
 			载荷质量：<input type="number" v-model.number="mass1"> t
 			<br/>
-			加 速 度：<input type="number" v-model.number="acc"> m/s^2
+			加  速  度 ： <input type="number" v-model.number="acc"> m/s^2
 			<br/>
 			目标距离：<input type="number" v-model.number="disGoal"> au
 		</p>
@@ -47,7 +49,7 @@
 			总加速距离占比：{{ asscruiseD }}%
 			总加速时间占比：{{ asscruiseT }}%
 			<br/>
-			{{ answer }}
+			<span v-html="answer"></span>
 		</p>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
@@ -58,7 +60,7 @@
 	data: {
 		cruiseS: 10,
 		accTime: 2,
-		effFual:0.712,
+		effFual:0.7,
 		mass1:1,
 		mass3:0,
 		acc:10,
@@ -133,16 +135,22 @@
 			this.asscruiseT=this.accT*this.accTime/(this.travelT)*100;
 
 			if(cruiseS>3e8){
-				this.answer='错误巡航速度大于光速  '+this.answer
+				this.answer='<span style="color:red">错误巡航速度大于光速  </span><br/>'+this.answer
 			}
 			else if(cruiseS>2.9e8){
-				this.answer='警告巡航速度接近光速齐奥尔科夫斯基火箭方程失效  '+this.answer
+				this.answer='<span style="color:yellow">警告巡航速度接近光速齐奥尔科夫斯基火箭方程失效  </span><br/>'+this.answer
 			}
 			if(this.effFual>0.89171){
-				this.answer='警告大于聚变极限  '+this.answer
+				this.answer='<span style="color:yellow">警告大于聚变极限  </span><br/>'+this.answer
 			}
 			if(this.cruiseT<0){
-				this.answer='错误不能达到巡航速度  '+this.answer
+				this.answer='<span style="color:red">错误不能达到巡航速度  </span><br/>'+this.answer
+			}
+			if(this.acc>100){
+				this.answer='<span style="color:yellow">警告超出人类可以承受加速度  </span><br/>'+this.answer
+			}
+			if(this.accW>3.846e23){
+				this.answer='<span style="color:yellow">平均功率超过太阳  </span><br/>'+this.answer
 			}
 
 			this.fualmass1=this.fualmass1.toFixed(5)
@@ -221,7 +229,9 @@
 				unitsM:[
 					{name:'千米(km)',rate:1,quantity:0},
 					{name:'天文单位(au)',rate:149597870.7,quantity:0},
-					{name:'空间里(sm)',rate:107925.28488,quantity:0}
+					{name:'空间里(sm)',rate:107925.28488,quantity:0},
+					{name:'光年(ly)',rate:47303652362904/5,quantity:0},
+					{name:'秒差距(pc)',rate:3.085677581467e13,quantity:0}
 					],
 				unitsV:[
 					{name:'千米每秒(km/s)',rate:1,quantity:0},
@@ -268,6 +278,6 @@
 		})
 	</script>
 
-<p>©2018 驿宁物理研究所, all rights reserved.</p>
+<p>©2218 驿宁物理研究所, all rights reserved.</p>
 </body>
 </html>
