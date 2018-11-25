@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>23世纪计算器</title>
+	<title>23世纪空间航行计算器</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<style>
 		body{
 			background:#333;
 			color: #fff;
 			}
+		a:link {color:#fff;}		/* 未被访问的链接 */
+		a:visited {color:#fff;}	/* 已被访问的链接 */
+		a:hover {color:rgb(255, 0, 0);}	/* 鼠标指针移动到链接上 */
+		a:active {color:#fff;}
 
 	</style>
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon" />
@@ -16,11 +20,11 @@
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-	<h1>23世纪计算器</h1>
+	<h1>23世纪空间航行计算器</h1>
 
 	<div id="travel">
-		<h2>星际旅行计算器</h2>
-		<h4>适用于传统核聚变推进方式</h4>
+		<h2>行星际航行计算器</h2>
+		<p><a href="http://wiki.23shiji.net/wiki/index.php/23%E4%B8%96%E7%BA%AA%E7%A9%BA%E9%97%B4%E8%88%AA%E8%A1%8C%E8%AE%A1%E7%AE%97%E5%99%A8">帮助文档</a></p>
 		<p>
 			巡航速度：<input type="number" v-model.number="cruiseS"> 空间节
 			加速次数：<input type="number" v-model.number="accTime"> 次
@@ -152,7 +156,16 @@
 			if(this.accW>3.846e23){
 				this.answer='<span style="color:yellow">平均功率超过太阳  </span><br/>'+this.answer
 			}
+			
 
+
+			function num2e(num){
+				var p = Math.floor(Math.log(num)/Math.LN10);
+				var n = num * Math.pow(10, -p);
+				return n.toFixed(5) + 'e' + p;
+			}
+
+			this.accW=num2e(this.accW);
 			this.fualmass1=this.fualmass1.toFixed(5)
 			this.fualmass0=this.fualmass0.toFixed(5)
 			this.mass0=this.mass0.toFixed(5)
