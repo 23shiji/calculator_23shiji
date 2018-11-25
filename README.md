@@ -3,5 +3,5 @@
  
  [demo地址](https://23shiji.github.io/calculator_23shiji/)
  
- [说明文档](http://wiki.23shiji.net/wiki/index.php/23%E4%B8%96%E7%BA%AA%E7%A9%BA%E9%97%B4%E8%88%AA%E8%A1%8C%E8%AE%A1%E7%AE%97%E5%99%A8)
+ [说明文档](http://wiki.23shiji.net/wiki/index.php/帮助:23世纪空间航行计算器)
  
