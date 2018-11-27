@@ -130,8 +130,8 @@
 			this.mass3=this.mass0-this.mass1;
 			this.fualmass0=this.mass3/this.mass0*100;
 			this.fualmass1=this.mass3/this.mass1*100;
-			this.accW=this.mass3*this.effFual/100*299792458*299792458/this.accT/this.accTime;
 			this.accT=cruiseS/this.acc;
+			this.accW=this.mass3*this.effFual/100*299792458*299792458/this.accT/this.accTime;
 			this.accD=1/2*this.acc*this.accT*this.accT;
 			this.cruiseT=(this.disGoal*149597870.7*1000-this.accD*this.accTime)/cruiseS;
 			this.travelT=this.cruiseT+this.accT*this.accTime;
