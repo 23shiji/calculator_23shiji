@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>23世纪空间航行计算器</title>
+	<title>空间航行计算器</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<style>
 		body{
@@ -20,7 +20,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-	<h1>23世纪空间航行计算器</h1>
+	<h1>空间航行计算器</h1>
 
 	<div id="travel">
 		<h2>行星际航行计算器</h2>
@@ -36,24 +36,36 @@
 			<br/>
 			目标距离：<input type="number" v-model.number="disGoal"> au
 		</p>
-		<p>
-			燃料/载荷比：{{ fualmass1 }}%
-			燃料/总重比：{{ fualmass0 }}%
-			<br/>
-			总重：{{ mass0 }}t
-			燃料质量：{{ mass3 }}t
-			<br/>
-			平均加速功率：{{ accW }}KW
-			<br/>
-			单次加速时间：{{ accT }}h
-			单次加速距离：{{ accD }}空间里
-			<br/>
-			旅行总时间：{{ travelT }}天
-			巡航时间：{{ cruiseT }}天
-			总加速距离占比：{{ asscruiseD }}%
-			总加速时间占比：{{ asscruiseT }}%
-			<br/>
+		<table border="1">
+			<tr>
+				<td>燃料/总重比：{{ fualmass0 }}%</td>
+				<td>总重：{{ mass0 }}t</td>
+			</tr>
+			<tr>
+				<td>燃料/载荷比：{{ fualmass1 }}%</td>
+				<td>燃料质量：{{ mass3 }}t</td>
+			</tr>
+			<tr>
+				<td>平均加速功率：{{ accW }}KW</td>
+			</tr>
+			<tr>
+				<td>单次加速时间：{{ accT }}h</td>
+				<td>旅行总时间：{{ travelT }}天</td>
+				<td>总加速距离占比：{{ asscruiseD }}%</td>
+				
+			</tr>
+			<tr>
+				<td>单次加速距离：{{ accD }}空间里</td>
+				<td>巡航时间：{{ cruiseT }}天</td>
+				<td>总加速时间占比：{{ asscruiseT }}%</td>
+			</tr>
 			<span v-html="answer"></span>
+		</table>
+		<p>
+			注：</br>1空间节被定义为真空中光速的万分之一。(29.97925 千米/秒)</br>
+			1空间里被定义为一空间节·小时。(107925.28488千米)</br>
+			au为<a href="https://baike.baidu.com/item/%E5%A4%A9%E6%96%87%E5%8D%95%E4%BD%8D">天文单位</a></br>
+			以上单位皆可在下方进行转换。
 		</p>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
@@ -248,7 +260,7 @@
 					],
 				unitsV:[
 					{name:'千米每秒(km/s)',rate:1,quantity:0},
-					{name:'千米每小时(km/s)',rate:(1/3600),quantity:0},
+					{name:'千米每小时(km/h)',rate:(1/3600),quantity:0},
 					{name:'空间节(sk)',rate:29.9792458,quantity:0},
 					{name:'天文单位每日(au/d)',rate:(498659569/288000),quantity:0},
 					{name:'光速(c)',rate:299792.458,quantity:0}
@@ -264,11 +276,12 @@
 					],
 				unitsE:[
 					{name:'焦耳(J)',rate:1,quantity:0},
-					{name:'标准聚变燃料(sff)',rate:0.007*299792458*299792458,quantity:0},
+					{name:'标准聚变燃料(t)',rate:0.007*299792458*299792458,quantity:0},
 					{name:'千瓦时(kw/h)',rate:3600000,quantity:0},
 					{name:'TNT当量(t)',rate:4.184e9,quantity:0},
+					{name:'标准石油(t)',rate:41.868*1e9,quantity:0},//https://baike.baidu.com/item/%E5%90%A8%E6%B2%B9%E5%BD%93%E9%87%8F/15580955
 					{name:'标准煤(t)',rate:29.3076*1e9,quantity:0},//标准煤数据来源https://wenku.baidu.com/view/5220bfe585868762caaedd3383c4bb4cf7ecb796.html
-					{name:'小男孩原子弹',rate:4.184e9*13000,quantity:0}
+					{name:'小男孩原子弹(颗)',rate:4.184e9*13000,quantity:0}
 					]
 			},
 			methods:{
@@ -291,6 +304,6 @@
 		})
 	</script>
 
-<p>©2218 驿宁物理研究所, all rights reserved.</p>
+<p>©2219 驿宁物理研究所, all rights reserved.</p>
 </body>
 </html>
